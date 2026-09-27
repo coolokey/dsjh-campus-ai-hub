@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大溪國中 Campus AI Agent 矩陣 | 全方位智慧校園與素養創新生態系</title>
+  <meta name="description" content="桃園市「AI好幫手：智慧協作工具徵選與應用計畫」參賽旗艦作品 - 大溪國中 Campus AI Agent 矩陣：涵蓋智慧行政減量、適性生涯導航、美育多模態創客、跨領域遊戲化素養。">
+  
+  <!-- Tailwind CSS CDN & Lucide Icons & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            },
+            cyber: {
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              purple: '#8b5cf6',
+              rose: '#f43f5e'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+    .glow-cyan {
+      box-shadow: 0 0 50px -10px rgba(6, 182, 212, 0.25);
+    }
+    .glow-indigo {
+      box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.25);
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-4px);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* 隱藏滾動條 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="selection:bg-indigo-500 selection:text-white">
+
+  <!-- 背景科技光斑 -->
+  <div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute top-[-10%] left-[10%] w-[500px] h-[500px] rounded-full bg-indigo-600/15 blur-[120px]"></div>
+    <div class="absolute top-[40%] right-[5%] w-[450px] h-[450px] rounded-full bg-cyan-600/10 blur-[130px]"></div>
+    <div class="absolute bottom-[-10%] left-[30%] w-[600px] h-[600px] rounded-full bg-purple-600/15 blur-[140px]"></div>
+  </div>
+
+  <!-- 頂部導覽列 -->
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">DSJH Campus AI Matrix</span>
+          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight">大溪國中 全方位 AI 智慧校園生態系</h1>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+        <a href="#admin-module" class="hover:text-cyan-400 transition-colors">智慧行政減量</a>
+        <a href="#adaptive-module" class="hover:text-indigo-400 transition-colors">適性導航與美育</a>
+        <a href="#gaming-module" class="hover:text-purple-400 transition-colors">跨領域遊戲素養</a>
+        <a href="#architecture" class="hover:text-amber-400 transition-colors">架構藍圖</a>
+        <a href="#proposal" class="hover:text-emerald-400 transition-colors">參賽提案摘要</a>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <a href="#proposal" class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 transition-all flex items-center space-x-1.5">
+          <i data-lucide="award" class="w-4 h-4"></i>
+          <span>評審導覽手冊</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero 英雄主視覺區 -->
+  <section class="relative z-10 pt-16 pb-12 sm:pt-24 sm:pb-20 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      
+      <!-- 競賽徽章 -->
+      <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-slate-300 text-xs sm:text-sm mb-6 backdrop-blur-md">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-medium">桃園市「AI好幫手：智慧協作工具徵選與應用計畫」參賽旗艦提案</span>
+      </div>
+
+      <!-- 標題 -->
+      <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-6">
+        重塑未來校園：<br class="hidden sm:inline">
+        <span class="gradient-text">行政減量 × 適性導航 × 跨領域遊戲化素養</span>
+      </h2>
+
+      <!-- 副標說明 -->
+      <p class="max-w-3xl mx-auto text-base sm:text-lg text-slate-300 leading-relaxed mb-10">
+        大溪國中將單點式 AI 工具昇華為全校級的 <span class="text-white font-semibold underline decoration-cyan-400">Campus AI Agent 矩陣</span>。
+        串連「公文排程、自主學習歷程、社團志願分發、多模態美育創客、數學塔防與雙人素養對決」，
+        落實 100% 雲端原生高可用性與零維護成本，全面實現智慧校園新範式！
+      </p>
+
+      <!-- 關鍵數據展示 -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl sm:text-3xl font-extrabold text-cyan-400 mb-1">90%+</div>
+          <div class="text-xs sm:text-sm text-slate-400 font-medium">行政重複作業節省</div>
+        </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl sm:text-3xl font-extrabold text-indigo-400 mb-1">6 大核心</div>
+          <div class="text-xs sm:text-sm text-slate-400 font-medium">全方位 Agent 矩陣</div>
+        </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mb-1">95%+</div>
+          <div class="text-xs sm:text-sm text-slate-400 font-medium">學生志願滿足率</div>
+        </div>
+        <div class="glass-card p-5 rounded-2xl">
+          <div class="text-2xl sm:text-3xl font-extrabold text-amber-400 mb-1">$0 元</div>
+          <div class="text-xs sm:text-sm text-slate-400 font-medium">伺服器雲端維護成本</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 作品矩陣主體：三大模組展示 -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20 pb-24">
+
+    <!-- 模組一：智慧行政減量 (Smart Admin) -->
+    <section id="admin-module" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div class="flex items-center space-x-3">
+          <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            <i data-lucide="building-2" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              模組一：智慧行政與流程自動化
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800 font-mono">Smart Admin</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-400">解決公文排程撞期、手寫筆記繁複建檔，實現校園日常庶務全自動化</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- 系統 1：校園智慧行事曆 Agent -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300">
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                處室會議排程協作
+              </span>
+              <span class="text-xs text-slate-400 font-mono">GAS + Gemini REST API</span>
+            </div>
+
+            <h4 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              📅 校園智慧行事曆 Agent
+            </h4>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+              解決校內公文通知雜亂與大型場地（校史室、視聽教室）搶時段衝突！貼上公文或 LINE 通知，Gemini 瞬時提取會議物件；內建「即時衝突雷達」防撞場地，並一鍵草擬 LINE 推播文案、公務標準議程與會議紀錄初稿。
+            </p>
+
+            <!-- 核心功能清單 -->
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400 mr-2 shrink-0"></i>
+                <span><strong>公文非結構化速填</strong>：自然語言轉換標準會議物件（含節次轉化）</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400 mr-2 shrink-0"></i>
+                <span><strong>即時動態衝突雷達</strong>：毫秒級防撞場地，自動推薦可用空檔</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400 mr-2 shrink-0"></i>
+                <span><strong>文書全自動草擬</strong>：一鍵輸出 LINE 推播、標準議程表與會議紀錄初稿</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-xs text-cyan-400/90 font-medium">⚡ 全學期節省 90% 會議行政工時</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="openPreviewModal('校園智慧行事曆 Agent', 'https://coolokey.github.io/dsjh-ai-calendar/')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white transition-all flex items-center space-x-1.5 shadow-md shadow-cyan-600/20">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                <span>即刻線上體驗</span>
+              </button>
+              <a href="https://github.com/coolokey/dsjh-ai-calendar" target="_blank" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 系統 2：學習軌跡 AI 助教 2.0 -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300">
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                自主學習歷程多模態
+              </span>
+              <span class="text-xs text-slate-400 font-mono">GAS + Gemini 1.5 Flash Vision</span>
+            </div>
+
+            <h4 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              📚 學習軌跡 AI 助教 2.0
+            </h4>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+              解決自主學習收件密碼障礙與期末手動打字彙整的龐大負擔！學生免 Google 帳號手機隨掃隨傳手寫筆記照片，系統二進位防偽自動分類私有目錄，Gemini 多模態視覺 OCR 萃取核心探究關鍵字，一鍵自動排版導出 Google Docs 全班成果手冊。
+            </p>
+
+            <!-- 核心功能清單 -->
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-blue-400 mr-2 shrink-0"></i>
+                <span><strong>免登入極簡收件</strong>：手機隨拍即傳，保障弱勢學生資訊平權</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-blue-400 mr-2 shrink-0"></i>
+                <span><strong>多模態手寫 OCR 萃取</strong>：精準辨識學生探究心得並擬定質性評語</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-blue-400 mr-2 shrink-0"></i>
+                <span><strong>成果手冊自動排版</strong>：由原本需 10 小時彙整，減為 15 秒一鍵產出 Docs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-xs text-blue-400/90 font-medium">⚡ 期末成果彙整工時縮減 85%+</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="openPreviewModal('學習軌跡 AI 助教 2.0', 'https://script.google.com/macros/s/AKfycbwKH313eJkeFd2kVD0V0P1ANF-C0KJ-HAZd1z_PVywqb13kgA1l-YA3mDPT9A7Z-4Egsg/exec')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all flex items-center space-x-1.5 shadow-md shadow-blue-600/20">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                <span>即刻線上體驗</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 模組二：適性導航與美育創客 (Adaptive Guidance & Maker) -->
+    <section id="adaptive-module" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div class="flex items-center space-x-3">
+          <div class="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <i data-lucide="compass" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              模組二：適性導航與美育創客
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800 font-mono">Adaptive & Maker</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-400">以 AI 引導學生適性探索興趣，並結合創客實踐將藝術轉化為實體成果</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- 系統 3：AI 智慧社團選社系統 -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300">
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                適性揚才 × 防併發鎖分發
+              </span>
+              <span class="text-xs text-slate-400 font-mono">GAS LockService + Gemini</span>
+            </div>
+
+            <h4 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              🎯 AI 智慧社團選社與適性導航系統
+            </h4>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+              徹底翻轉傳統選社盲選搶額與跨週協調惡夢！提供 AI 生涯探索顧問對話，比對學生興趣與課綱；後端採用 Google Apps Script LockService 伺服器鎖杜絕超額；獨家多志願加權平衡分發演算法，前三志願滿足率高達 95%，一鍵產出格式化點名表。
+            </p>
+
+            <!-- 核心功能清單 -->
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 mr-2 shrink-0"></i>
+                <span><strong>AI 適性探索顧問</strong>：深度解析社團核心素養，提供精準適配度</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 mr-2 shrink-0"></i>
+                <span><strong>LockService 併發鎖</strong>：多學生同時搶額零衝突、絕不超額</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 mr-2 shrink-0"></i>
+                <span><strong>多志願公平分發</strong>：5 分鐘內完成全校分流，滿足率 95%+</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-xs text-indigo-400/90 font-medium">⚡ 點名冊與成果手冊 30 秒一鍵匯出</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="openPreviewModal('AI 智慧社團選社系統', 'https://coolokey.github.io/dsjh-ai-club-selector/')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-all flex items-center space-x-1.5 shadow-md shadow-indigo-600/20">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                <span>即刻線上體驗</span>
+              </button>
+              <a href="https://github.com/coolokey/dsjh-ai-club-selector" target="_blank" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 系統 4：AI 藝術能量掃描儀 2.0 -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300">
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                多模態美育 × 創客印刷實踐
+              </span>
+              <span class="text-xs text-slate-400 font-mono">Gemini Vision + HTML5 Canvas</span>
+            </div>
+
+            <h4 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              🎨 AI 藝術能量掃描儀 2.0
+            </h4>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+              融合多模態 AI 評量與創客教育的跨領域利器！學生拍照上傳畫作，AI 依五維藝術規準深度評析並產出能量雷達圖與稱號；作品達 85 分自動歸檔至雲端硬碟總表；更可一鍵導出 58mm 印刷級胸章檔案與黃金能量證書，實現虛實整合！
+            </p>
+
+            <!-- 核心功能清單 -->
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-rose-400 mr-2 shrink-0"></i>
+                <span><strong>五維美感雷達認證</strong>：文意契合、配色構圖與創意多模態嚴格評鑑</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-rose-400 mr-2 shrink-0"></i>
+                <span><strong>58mm 創客胸章匯出</strong>：即時渲染出血規格，直接送入壓模機實作</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-rose-400 mr-2 shrink-0"></i>
+                <span><strong>評審快速通道</strong>：免輸入 API Key 即刻一鍵體驗標準範例與評鑑</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-xs text-rose-400/90 font-medium">⚡ 虛實整合美育評鑑與實體產出</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="openPreviewModal('AI 藝術能量掃描儀 2.0', 'https://coolokey.github.io/ai-art-scanner-2.0/')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-rose-600 hover:bg-rose-500 text-white transition-all flex items-center space-x-1.5 shadow-md shadow-rose-600/20">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                <span>即刻線上體驗</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 模組三：跨學科遊戲化素養評量 (Gamified EdTech) -->
+    <section id="gaming-module" class="space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div class="flex items-center space-x-3">
+          <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            <i data-lucide="gamepad-2" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              模組三：跨領域遊戲化素養評量
+              <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 font-mono">Gamified EdTech</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-400">將抽象學科知識轉化為高動機互動對戰與塔防闖關，重燃學生主動學習熱情</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- 系統 5：數界試煉：質數守門 -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300">
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                數學因數分解 × 塔防闖關
+              </span>
+              <span class="text-xs text-slate-400 font-mono">HTML5 Game Engine + Web Audio</span>
+            </div>
+
+            <h4 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              🛡️ 數界試煉：質數守門 (Prime Factor Defense)
+            </h4>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+              攻克國中七年級數學最棘手的「因數、倍數、質數與質因數分解」學習痛點！玩家扮演數界守門者，面對逼近的複合數怪物，必須即時心算分解質因數發射對應能量彈消滅敵軍。將枯燥計算化為緊張刺激的動態防禦機制！
+            </p>
+
+            <!-- 核心功能清單 -->
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mr-2 shrink-0"></i>
+                <span><strong>動態心算分解機制</strong>：即時判斷合數與質數砲彈搭配打擊</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mr-2 shrink-0"></i>
+                <span><strong>自適應波次難度</strong>：隨玩家熟練度動態擴增數值範圍與特殊怪</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400 mr-2 shrink-0"></i>
+                <span><strong>免安裝即開即玩</strong>：跨手機/平板載具，教學課堂隨開即測</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-xs text-emerald-400/90 font-medium">⚡ 數學素養概念具象化 100% 融入</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="openPreviewModal('數界試煉：質數守門', 'https://coolokey.github.io/prime-factor-defense/prime-factor-defense-20260816-221725.html')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-all flex items-center space-x-1.5 shadow-md shadow-emerald-600/20">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                <span>即刻線上體驗</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 系統 6：DDP 知識對決 -->
+        <div class="glass-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300">
+          <div>
+            <div class="flex items-start justify-between mb-4">
+              <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                跨學科即時雙人搶答
+              </span>
+              <span class="text-xs text-slate-400 font-mono">Modern JS + Web Audio + RWD</span>
+            </div>
+
+            <h4 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              ⚔️ DDP 知識對決 (Dual Duel Pro)
+            </h4>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+              點燃課堂活力與自主複習動能的跨學科對決平台！支援兩名學生在同一台平板或電腦左右分屏實時搶答，結合連擊加成（Combo Multiplier）、血量扣減機制與震撼音效，將傳統隨堂測驗昇華為兼具知識深度與電競刺激感的素養擂台！
+            </p>
+
+            <!-- 核心功能清單 -->
+            <div class="space-y-2 mb-6">
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-purple-400 mr-2 shrink-0"></i>
+                <span><strong>同屏即時雙人對戰</strong>：零延遲按鍵/點擊反饋，營造課堂沉浸感</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-purple-400 mr-2 shrink-0"></i>
+                <span><strong>跨學科題庫自由擴充</strong>：相容國文、社會、自然、雙語等多元學科</span>
+              </div>
+              <div class="flex items-center text-xs sm:text-sm text-slate-300">
+                <i data-lucide="check-circle" class="w-4 h-4 text-purple-400 mr-2 shrink-0"></i>
+                <span><strong>激勵型動態反饋</strong>：連擊得分加成與血量機制，激發自我挑戰欲</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
+            <span class="text-xs text-purple-400/90 font-medium">⚡ 課堂複習參與率躍升 100%</span>
+            <div class="flex items-center space-x-2">
+              <button onclick="openPreviewModal('DDP 知識對決', 'https://coolokey.github.io/dd2p-quiz-web/')" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-all flex items-center space-x-1.5 shadow-md shadow-purple-600/20">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i>
+                <span>即刻線上體驗</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 生態架構圖與技術堆疊 -->
+    <section id="architecture" class="glass-card rounded-3xl p-8 sm:p-10 border border-slate-800">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Technical Blueprint</span>
+        <h3 class="text-2xl sm:text-3xl font-bold text-white mt-1">全校級 AI 協作生態系技術架構圖</h3>
+        <p class="text-sm text-slate-400 mt-2">
+          採用「全端無伺服器 (Serverless)」+「Google Workspace 深度整合」+「Gemini 雙模態推理」架構，具備高擴充性、高資安防護與零維護預算優勢。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-4">
+            <i data-lucide="layout" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-white text-base mb-2">1. 前端多載具適應層</h4>
+          <ul class="space-y-1.5 text-slate-400 text-xs sm:text-sm">
+            <li>• HTML5 / Tailwind CSS / Vanilla JS</li>
+            <li>• 跨手機、平板、大型電子白板 RWD</li>
+            <li>• 免登入/驗證雙軌模式，兼顧平權與防偽</li>
+            <li>• 採用 GitHub Pages 進行全球 CDN 高速分發</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-4">
+            <i data-lucide="bot" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-white text-base mb-2">2. AI 智能推理與辨識層</h4>
+          <ul class="space-y-1.5 text-slate-400 text-xs sm:text-sm">
+            <li>• Google Gemini 1.5 / 2.5 Flash 多模態 API</li>
+            <li>• 公文與通知之自然語言實體命名辨識 (NER)</li>
+            <li>• 手寫筆記與美育畫作之 Multimodal Vision OCR</li>
+            <li>• 去識別化提示詞工程 (Zero PII Exposure)</li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-4">
+            <i data-lucide="database" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-white text-base mb-2">3. 雲端後端與行政報表層</h4>
+          <ul class="space-y-1.5 text-slate-400 text-xs sm:text-sm">
+            <li>• Google Apps Script 伺服器端核心</li>
+            <li>• LockService 併發鎖杜絕名額超額與搶位</li>
+            <li>• 自動寫入 Google Sheets 即時動態總表</li>
+            <li>• 自動排版生成 Google Docs 符合教育局檢核手冊</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 參賽提案摘要與評審導覽手冊 -->
+    <section id="proposal" class="glass-card rounded-3xl p-8 sm:p-10 border border-indigo-500/30 glow-indigo">
+      <div class="max-w-4xl mx-auto space-y-8">
+        
+        <div class="border-b border-slate-800 pb-6 text-center">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-semibold mb-3">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+            <span>正式參賽提報摘要</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-white">
+            大溪國中 Campus AI Agent 矩陣：全方位校園智慧行政、適性導航與跨學科素養生態系
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-400 mt-2">
+            提案學校：桃園市立大溪國民中學 ｜ 代表人：毛郁仁 老師 ｜ 徵件組別：智慧行政（兼精進教學創新與班級經營）
+          </p>
+        </div>
+
+        <!-- 評分標準四大指標呼應 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+          
+          <div class="space-y-2 bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+            <div class="flex items-center space-x-2 text-cyan-400 font-bold">
+              <span class="w-6 h-6 rounded-full bg-cyan-400/20 flex items-center justify-center text-xs">1</span>
+              <span>問題描述與需求分析 (25%)</span>
+            </div>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              中小學校園長期面臨行政繁重（公文重打、會議撞期、紙本收件建檔）與教學分流痛點（選社盲選、素養評量枯燥）。傳統單點工具難以貫通全校跨處室流程。本案打造全方位 Agent 生態系，從公文排程、自主學習歷程、社團志願分發到跨學科遊戲化評量，一次性徹底解決各處室痛點。
+            </p>
+          </div>
+
+          <div class="space-y-2 bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+            <div class="flex items-center space-x-2 text-indigo-400 font-bold">
+              <span class="w-6 h-6 rounded-full bg-indigo-400/20 flex items-center justify-center text-xs">2</span>
+              <span>突破亮點 (25%)</span>
+            </div>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              <strong>【全端跨域整合】</strong>首創串連行政、輔導、創客與遊戲化評量；<strong>【併發防護演算法】</strong>導入 LockService 杜絕搶名額爭議；<strong>【多模態端到端】</strong>手寫筆記與美育畫作直接透過 Vision AI 轉為結構化報表與創客印刷檔，真正落實「零手動重複輸入」。
+            </p>
+          </div>
+
+          <div class="space-y-2 bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+            <div class="flex items-center space-x-2 text-emerald-400 font-bold">
+              <span class="w-6 h-6 rounded-full bg-emerald-400/20 flex items-center justify-center text-xs">3</span>
+              <span>功能簡介與初步實現步驟 (25%)</span>
+            </div>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              涵蓋六大子系統：AI 行事曆排程防撞、學習軌跡免登入多模態助教、適性社團多志願分發、美育創客胸章掃描儀、質數守門塔防遊戲與跨學科雙人搶答對決。六大作品皆已 100% 實現並上線運作，在校內實際班級進行常態化驗證，成熟度極高。
+            </p>
+          </div>
+
+          <div class="space-y-2 bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+            <div class="flex items-center space-x-2 text-amber-400 font-bold">
+              <span class="w-6 h-6 rounded-full bg-amber-400/20 flex items-center justify-center text-xs">4</span>
+              <span>預期效益 (25%)</span>
+            </div>
+            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              <strong>【量化工時節省 90% 以上】</strong>：會議排程由 20 分減至 2 分鐘、期末成果冊由 10 小時減至 15 秒、選社分發由 1 週縮減至 5 分鐘內。<strong>【質化影響】</strong>：保障弱勢學生平權、激發學習動能，全校節省之數百小時工時徹底回歸教學與學生輔導。
+            </p>
+          </div>
+
+        </div>
+
+        <!-- 評審操作指南 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-950/60 to-purple-950/60 border border-indigo-800/50">
+          <h4 class="font-bold text-white text-base mb-3 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i>
+            評審委員快速體驗引導建議 (Evaluation Guide)
+          </h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="font-bold text-cyan-400 mb-1">1. 體驗行政自動化</div>
+              <p>點擊「校園智慧行事曆」，隨意貼入一段文字或點擊「範例公文速填」，即刻體驗衝突雷達與 LINE 文案一秒產出。</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="font-bold text-indigo-400 mb-2">2. 體驗適性與美育</div>
+              <p>點擊「社團選社系統」體驗 AI 適性對話顧問；點擊「藝術能量掃描儀」進入評審快速通道，一鍵評估範例畫作並匯出胸章圖檔。</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="font-bold text-purple-400 mb-2">3. 體驗遊戲化素養</div>
+              <p>點擊「質數守門」體驗心算塔防闖關；點擊「DDP 知識對決」直接在鍵盤或螢幕兩側體驗雙人即時搶答競速！</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 頁腳 -->
+  <footer class="border-t border-slate-800/80 py-8 bg-slate-950 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 space-y-2">
+      <p class="text-slate-400">桃園市立大溪國民中學 ｜ AI 智慧校園創新研發團隊 ｜ 著作權所有 © 2026</p>
+      <p>落實「行政減量、適性揚才、智慧領航」之教育初衷</p>
+    </div>
+  </footer>
+
+  <!-- 浮動即時預覽彈窗 (Live Iframe Modal) -->
+  <div id="previewModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-2 sm:p-6">
+    <div class="glass-card w-full max-w-6xl h-[92vh] rounded-2xl flex flex-col overflow-hidden border border-slate-700 shadow-2xl">
+      <!-- 彈窗頂部欄 -->
+      <div class="px-5 py-3.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+          <h4 id="modalTitle" class="text-sm sm:text-base font-bold text-white">線上即時預覽</h4>
+          <span class="hidden sm:inline text-xs text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Live Interactive Mode</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <a id="modalExternalLink" href="#" target="_blank" class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center space-x-1 transition-all">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            <span>以新分頁開啟</span>
+          </a>
+          <button onclick="closePreviewModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white transition-all">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+      <!-- 彈窗內容 Iframe -->
+      <div class="flex-1 bg-slate-950 relative">
+        <div id="iframeLoader" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 text-sm space-y-3">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin text-cyan-400"></i>
+          <span>系統載入中，請稍候...</span>
+        </div>
+        <iframe id="previewIframe" src="" class="w-full h-full border-0 relative z-10" onload="hideLoader()"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide 圖示初始化與腳本 -->
+  <script>
+    lucide.createIcons();
+
+    const previewModal = document.getElementById('previewModal');
+    const previewIframe = document.getElementById('previewIframe');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalExternalLink = document.getElementById('modalExternalLink');
+    const iframeLoader = document.getElementById('iframeLoader');
+
+    function openPreviewModal(title, url) {
+      modalTitle.innerText = title;
+      modalExternalLink.href = url;
+      iframeLoader.style.display = 'flex';
+      previewIframe.src = url;
+      previewModal.classList.remove('hidden');
+      previewModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePreviewModal() {
+      previewModal.classList.add('hidden');
+      previewModal.classList.remove('flex');
+      previewIframe.src = '';
+      document.body.style.overflow = 'auto';
+    }
+
+    function hideLoader() {
+      iframeLoader.style.display = 'none';
+    }
+
+    // 按 ESC 關閉 Modal
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !previewModal.classList.contains('hidden')) {
+        closePreviewModal();
+      }
+    });
+  </script>
+</body>
+</html>
