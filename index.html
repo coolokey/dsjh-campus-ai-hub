@@ -104,9 +104,9 @@
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
           <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
         </div>
-        <div>
-          <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">DSJH Campus AI Matrix</span>
-          <h1 class="text-sm sm:text-base font-bold text-white tracking-tight">大溪國中 全方位 AI 智慧校園生態系</h1>
+        <div class="min-w-0">
+          <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-cyan-400 block truncate">DSJH Campus AI</span>
+          <h1 class="text-xs sm:text-base font-bold text-white tracking-tight truncate">大溪智慧校園 AI 協作矩陣</h1>
         </div>
       </div>
 
@@ -118,16 +118,45 @@
         <a href="#proposal" class="hover:text-emerald-400 transition-colors">參賽提案摘要</a>
       </nav>
 
-      <div class="flex items-center space-x-3">
-        <button onclick="openVideoModal()" class="px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/30 transition-all flex items-center space-x-1.5 animate-pulse">
+      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        <button onclick="openVideoModal()" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/30 transition-all flex items-center space-x-1.5 animate-pulse">
           <i data-lucide="video" class="w-4 h-4"></i>
-          <span>🎬 實作示範短片 (2:57)</span>
+          <span class="hidden xs:inline sm:inline">🎬 實作示範短片 (2:56)</span>
+          <span class="xs:hidden sm:hidden">🎬 2:56 影片</span>
         </button>
         <a href="#proposal" class="hidden sm:flex px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 transition-all items-center space-x-1.5">
           <i data-lucide="award" class="w-4 h-4"></i>
           <span>評審導覽手冊</span>
         </a>
+        <!-- 行動版漢堡選單按鈕 -->
+        <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-1.5 sm:p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all">
+          <i id="mobileMenuIcon" data-lucide="menu" class="w-5 h-5"></i>
+        </button>
       </div>
+    </div>
+
+    <!-- 行動版下拉導覽選單 -->
+    <div id="mobileMenu" class="hidden md:hidden bg-slate-900/98 backdrop-blur-2xl border-b border-slate-800 px-5 pt-3 pb-5 space-y-2.5 text-sm font-medium shadow-2xl">
+      <a href="#admin-module" onclick="toggleMobileMenu()" class="flex items-center space-x-2 py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition-colors">
+        <i data-lucide="building-2" class="w-4 h-4 text-cyan-400"></i>
+        <span>智慧行政減量 (行事曆 / 學習助教)</span>
+      </a>
+      <a href="#adaptive-module" onclick="toggleMobileMenu()" class="flex items-center space-x-2 py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-indigo-400 transition-colors">
+        <i data-lucide="compass" class="w-4 h-4 text-indigo-400"></i>
+        <span>適性導航與美育 (社團選社 / 創客胸章)</span>
+      </a>
+      <a href="#gaming-module" onclick="toggleMobileMenu()" class="flex items-center space-x-2 py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-purple-400 transition-colors">
+        <i data-lucide="gamepad-2" class="w-4 h-4 text-purple-400"></i>
+        <span>跨領域遊戲素養 (質數守門 / DDP對決)</span>
+      </a>
+      <a href="#architecture" onclick="toggleMobileMenu()" class="flex items-center space-x-2 py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-amber-400 transition-colors">
+        <i data-lucide="layout" class="w-4 h-4 text-amber-400"></i>
+        <span>技術架構藍圖 (Serverless / Gemini)</span>
+      </a>
+      <a href="#proposal" onclick="toggleMobileMenu()" class="flex items-center space-x-2 py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-emerald-400 transition-colors">
+        <i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i>
+        <span>參賽提案摘要與評審手冊</span>
+      </a>
     </div>
   </header>
 
@@ -155,10 +184,10 @@
       </p>
 
       <!-- 示範影片 CTA 專區 -->
-      <div class="flex flex-wrap items-center justify-center gap-4 mb-10">
+      <div class="flex flex-wrap items-center justify-center gap-4 mb-4">
         <button onclick="openVideoModal()" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-indigo-600 text-white font-extrabold text-base shadow-xl shadow-rose-600/30 hover:scale-105 transition-all flex items-center space-x-2">
           <i data-lucide="play-circle" class="w-5 h-5"></i>
-          <span>▶️ 點擊播放實作示範短片 (3分鐘內 / 附輕音樂與雙手體感)</span>
+          <span>▶️ 點擊播放實作示範短片 (2分56秒 / 附輕音樂與雙手體感)</span>
         </button>
         <a href="dsjh_campus_ai_demo.mp4" download class="px-4 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-sm font-semibold transition-all flex items-center space-x-2">
           <i data-lucide="download" class="w-4 h-4"></i>
@@ -166,23 +195,49 @@
         </a>
       </div>
 
+      <!-- 示範短片精華章節預覽 Badge -->
+      <div class="flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 mb-10">
+        <span class="px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 flex items-center gap-1.5 text-cyan-300">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-cyan-400"></i>行事曆衝突防撞
+        </span>
+        <span class="px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 flex items-center gap-1.5 text-blue-300">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i>免登入手寫OCR
+        </span>
+        <span class="px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 flex items-center gap-1.5 text-indigo-300">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-indigo-400"></i>選社加權分發
+        </span>
+        <span class="px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 flex items-center gap-1.5 text-rose-300">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-rose-400"></i>藝術胸章創客
+        </span>
+        <span class="px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 flex items-center gap-1.5 text-emerald-300">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>WebCam雙手塔防
+        </span>
+        <span class="px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/80 flex items-center gap-1.5 text-purple-300">
+          <i data-lucide="check" class="w-3.5 h-3.5 text-purple-400"></i>DDP同屏對決
+        </span>
+      </div>
+
       <!-- 關鍵數據展示 -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-        <div class="glass-card p-5 rounded-2xl">
+        <div class="glass-card p-5 rounded-2xl text-left">
           <div class="text-2xl sm:text-3xl font-extrabold text-cyan-400 mb-1">90%+</div>
-          <div class="text-xs sm:text-sm text-slate-400 font-medium">行政重複作業節省</div>
+          <div class="text-xs sm:text-sm text-white font-semibold">行政重複工時節省</div>
+          <div class="text-[11px] text-slate-400 mt-1">公文速填與衝突防撞 20分→2分</div>
         </div>
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl sm:text-3xl font-extrabold text-indigo-400 mb-1">6 大核心</div>
-          <div class="text-xs sm:text-sm text-slate-400 font-medium">全方位 Agent 矩陣</div>
+        <div class="glass-card p-5 rounded-2xl text-left">
+          <div class="text-2xl sm:text-3xl font-extrabold text-blue-400 mb-1">15 秒</div>
+          <div class="text-xs sm:text-sm text-white font-semibold">成果手冊自動排版</div>
+          <div class="text-[11px] text-slate-400 mt-1">免登入手寫OCR 縮短10小時</div>
         </div>
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mb-1">95%+</div>
-          <div class="text-xs sm:text-sm text-slate-400 font-medium">學生志願滿足率</div>
+        <div class="glass-card p-5 rounded-2xl text-left">
+          <div class="text-2xl sm:text-3xl font-extrabold text-indigo-400 mb-1">95%+</div>
+          <div class="text-xs sm:text-sm text-white font-semibold">適性志願分發滿足率</div>
+          <div class="text-[11px] text-slate-400 mt-1">LockService防搶鎖 5分鐘分流</div>
         </div>
-        <div class="glass-card p-5 rounded-2xl">
-          <div class="text-2xl sm:text-3xl font-extrabold text-amber-400 mb-1">$0 元</div>
-          <div class="text-xs sm:text-sm text-slate-400 font-medium">伺服器雲端維護成本</div>
+        <div class="glass-card p-5 rounded-2xl text-left">
+          <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mb-1">$0 元</div>
+          <div class="text-xs sm:text-sm text-white font-semibold">伺服器雲端維護成本</div>
+          <div class="text-[11px] text-slate-400 mt-1">全端Serverless零資安維護負擔</div>
         </div>
       </div>
 
@@ -687,10 +742,24 @@
   </main>
 
   <!-- 頁腳 -->
-  <footer class="border-t border-slate-800/80 py-8 bg-slate-950 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 space-y-2">
-      <p class="text-slate-400">桃園市立大溪國民中學 ｜ AI 智慧校園創新研發團隊 ｜ 著作權所有 © 2026</p>
-      <p>落實「行政減量、適性揚才、智慧領航」之教育初衷</p>
+  <footer class="border-t border-slate-800/80 py-10 bg-slate-950 text-center text-xs text-slate-500">
+    <div class="max-w-5xl mx-auto px-4 space-y-3">
+      <div class="flex flex-wrap items-center justify-center gap-4 text-slate-300 text-sm font-medium">
+        <span>🏫 桃園市立大溪國民中學</span>
+        <span class="text-slate-600">|</span>
+        <span>👨‍🏫 研發負責人：游貿仁 老師</span>
+        <span class="text-slate-600">|</span>
+        <a href="https://github.com/coolokey/dsjh-campus-ai-hub" target="_blank" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+          <i data-lucide="github" class="w-4 h-4"></i>
+          <span>GitHub 開源專案庫</span>
+        </a>
+      </div>
+      <p class="text-slate-400 max-w-2xl mx-auto leading-relaxed">
+        特別致謝：DDP 知識對決核心概念改編自<strong>桃園市立東興國中鍾老師</strong>原創教學創意作品，感謝桃園市跨校教師社群之教育開源共享共好精神。
+      </p>
+      <p class="text-slate-600 text-[11px]">
+        桃園市「AI好幫手：智慧協作工具徵選與應用計畫」參賽作品 ｜ 大溪智慧校園 AI 協作矩陣 ｜ 著作權所有 © 2026
+      </p>
     </div>
   </footer>
 
@@ -731,7 +800,7 @@
       <div class="px-5 py-3.5 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
-          <h4 class="text-sm sm:text-base font-bold text-white">大溪智慧校園 AI 協作矩陣 ｜ 實作示範短片 (2分57秒)</h4>
+          <h4 class="text-sm sm:text-base font-bold text-white">大溪智慧校園 AI 協作矩陣 ｜ 實作示範短片 (2分56秒)</h4>
         </div>
         <div class="flex items-center space-x-2">
           <a href="dsjh_campus_ai_demo.mp4" download class="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center space-x-1">
@@ -743,11 +812,58 @@
           </button>
         </div>
       </div>
+      
+      <!-- 播放器主體 -->
       <div class="aspect-video bg-black flex items-center justify-center">
         <video id="demoVideoPlayer" controls class="w-full h-full" preload="metadata">
           <source src="dsjh_campus_ai_demo.mp4" type="video/mp4">
           您的瀏覽器不支援 HTML5 影片播放。
         </video>
+      </div>
+
+      <!-- 評審專屬：章節快速導航時間軸 -->
+      <div class="px-4 py-3 bg-slate-900/95 border-t border-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center space-x-2 text-xs font-semibold text-slate-300">
+            <i data-lucide="list-video" class="w-4 h-4 text-cyan-400"></i>
+            <span>評審快速章節跳轉 (點選即跳至對應展示)：</span>
+          </div>
+          <span id="currentTimeDisplay" class="text-xs font-mono text-cyan-400 font-bold">00:00 / 02:56</span>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-1.5 text-xs">
+          <button onclick="jumpVideo(0)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-cyan-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-cyan-400 text-[10px] font-bold">0:00</span>
+            <span class="truncate font-medium">🌟 片頭導覽</span>
+          </button>
+          <button onclick="jumpVideo(6)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-cyan-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-cyan-400 text-[10px] font-bold">0:06</span>
+            <span class="truncate font-medium">📅 智慧行事曆</span>
+          </button>
+          <button onclick="jumpVideo(33)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-blue-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-blue-400 text-[10px] font-bold">0:33</span>
+            <span class="truncate font-medium">📚 學習軌跡助教</span>
+          </button>
+          <button onclick="jumpVideo(60)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-indigo-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-indigo-400 text-[10px] font-bold">1:00</span>
+            <span class="truncate font-medium">🎯 社團選社導航</span>
+          </button>
+          <button onclick="jumpVideo(87)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-rose-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-rose-400 text-[10px] font-bold">1:27</span>
+            <span class="truncate font-medium">🎨 藝術能量掃描</span>
+          </button>
+          <button onclick="jumpVideo(114)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-emerald-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-emerald-400 text-[10px] font-bold">1:54</span>
+            <span class="truncate font-medium">🛡️ 數界質數體感</span>
+          </button>
+          <button onclick="jumpVideo(143)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-purple-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-purple-400 text-[10px] font-bold">2:23</span>
+            <span class="truncate font-medium">⚔️ DDP 知識對決</span>
+          </button>
+          <button onclick="jumpVideo(170)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-amber-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
+            <span class="font-mono text-amber-400 text-[10px] font-bold">2:50</span>
+            <span class="truncate font-medium">🏁 片尾量化總結</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -755,6 +871,14 @@
   <!-- Lucide 圖示初始化與腳本 -->
   <script>
     lucide.createIcons();
+
+    const mobileMenu = document.getElementById('mobileMenu');
+    function toggleMobileMenu() {
+      if (mobileMenu) {
+        mobileMenu.classList.toggle('hidden');
+        lucide.createIcons();
+      }
+    }
 
     const previewModal = document.getElementById('previewModal');
     const previewIframe = document.getElementById('previewIframe');
@@ -764,6 +888,7 @@
 
     const videoModal = document.getElementById('videoModal');
     const demoVideoPlayer = document.getElementById('demoVideoPlayer');
+    const currentTimeDisplay = document.getElementById('currentTimeDisplay');
 
     function openVideoModal() {
       videoModal.classList.remove('hidden');
@@ -777,6 +902,24 @@
       videoModal.classList.remove('flex');
       demoVideoPlayer.pause();
       document.body.style.overflow = 'auto';
+    }
+
+    function jumpVideo(seconds) {
+      if (demoVideoPlayer) {
+        demoVideoPlayer.currentTime = seconds;
+        demoVideoPlayer.play();
+      }
+    }
+
+    if (demoVideoPlayer) {
+      demoVideoPlayer.addEventListener('timeupdate', () => {
+        const cur = Math.floor(demoVideoPlayer.currentTime);
+        const m = String(Math.floor(cur / 60)).padStart(2, '0');
+        const s = String(cur % 60).padStart(2, '0');
+        if (currentTimeDisplay) {
+          currentTimeDisplay.innerText = `${m}:${s} / 02:56`;
+        }
+      });
     }
 
     function openPreviewModal(title, url) {
@@ -805,6 +948,7 @@
       if (e.key === 'Escape') {
         if (!previewModal.classList.contains('hidden')) closePreviewModal();
         if (!videoModal.classList.contains('hidden')) closeVideoModal();
+        if (mobileMenu && !mobileMenu.classList.contains('hidden')) toggleMobileMenu();
       }
     });
   </script>
