@@ -967,6 +967,11 @@
                   status: '已審查核准'
                 }]
               });
+            } else if (method === 'exportSummaryDoc') {
+              resolve({
+                success: true,
+                docUrl: 'https://docs.google.com/document/d/1DemoPortfolioSummaryDoc_DSJH/preview'
+              });
             } else {
               resolve({success: true});
             }
