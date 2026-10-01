@@ -191,7 +191,7 @@
         </button>
         <a href="dsjh_campus_ai_demo.mp4" download class="px-4 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-sm font-semibold transition-all flex items-center space-x-2">
           <i data-lucide="download" class="w-4 h-4"></i>
-          <span>下載 MP4 檔案 (29MB)</span>
+          <span>下載 MP4 檔案 (26MB / 串流最佳化)</span>
         </a>
       </div>
 
@@ -815,7 +815,7 @@
       
       <!-- 播放器主體 -->
       <div class="aspect-video bg-black flex items-center justify-center">
-        <video id="demoVideoPlayer" controls class="w-full h-full" preload="metadata">
+        <video id="demoVideoPlayer" controls playsinline class="w-full h-full" preload="auto">
           <source src="dsjh_campus_ai_demo.mp4" type="video/mp4">
           您的瀏覽器不支援 HTML5 影片播放。
         </video>
