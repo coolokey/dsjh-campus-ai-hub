@@ -121,8 +121,8 @@
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <button onclick="openVideoModal()" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/30 transition-all flex items-center space-x-1.5 animate-pulse">
           <i data-lucide="video" class="w-4 h-4"></i>
-          <span class="hidden xs:inline sm:inline">🎬 實作示範短片 (2:56)</span>
-          <span class="xs:hidden sm:hidden">🎬 2:56 影片</span>
+          <span class="hidden xs:inline sm:inline">🎬 實作示範短片 (2:59)</span>
+          <span class="xs:hidden sm:hidden">🎬 2:59 影片</span>
         </button>
         <a href="#proposal" class="hidden sm:flex px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 transition-all items-center space-x-1.5">
           <i data-lucide="award" class="w-4 h-4"></i>
@@ -837,7 +837,7 @@
             <i data-lucide="list-video" class="w-4 h-4 text-cyan-400"></i>
             <span>評審快速章節跳轉 (點選即跳至對應展示)：</span>
           </div>
-          <span id="currentTimeDisplay" class="text-xs font-mono text-cyan-400 font-bold">00:00 / 02:56</span>
+          <span id="currentTimeDisplay" class="text-xs font-mono text-cyan-400 font-bold">00:00 / 02:59</span>
         </div>
         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-1.5 text-xs">
           <button onclick="jumpVideo(0)" class="chapter-btn px-2 py-1.5 rounded-lg bg-slate-800/90 hover:bg-cyan-600 hover:text-white text-slate-300 border border-slate-700/80 transition-all text-left flex flex-col">
@@ -926,7 +926,7 @@
         const m = String(Math.floor(cur / 60)).padStart(2, '0');
         const s = String(cur % 60).padStart(2, '0');
         if (currentTimeDisplay) {
-          currentTimeDisplay.innerText = `${m}:${s} / 02:56`;
+          currentTimeDisplay.innerText = `${m}:${s} / 02:59`;
         }
       });
     }
