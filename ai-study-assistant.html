@@ -697,8 +697,9 @@
             </div>
           </div>
 
+          <label style="display:flex; gap:10px; align-items:flex-start;"><input id="anonymous-document-consent" type="checkbox" style="width:20px; height:20px; flex-shrink:0;">我已移除文件中的姓名、班級、座號、人像與其他可識別資訊，並同意將文件傳送 Google Gemini 進行 AI 分析。</label>
+          <p class="privacy">勾選為自願；未勾選仍可繳交作業。系統不會自動遮蔽影像或 PDF 個資，無法保證匿名化。表單身分資料只供校內收件管理，不加入 AI 提示詞。雲端檔案權限由學校管理，AI 建議需教師審查。</p>
           <button class="submit" id="submit" type="submit">確認送出作業　→</button>
-          <p class="privacy">🔒 私人雲端資料夾保護，檔案僅供指導老師與 AI 助教學習分析使用，不公開展示。</p>
         </fieldset>
       </form>
 
@@ -766,13 +767,11 @@
       </button>
       <div id="query-panel" class="hidden" style="margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px;">
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
-          <input type="text" id="q-class" placeholder="班級 (例如 701)" style="flex: 1; min-width: 90px; height: 38px;">
-          <input type="number" id="q-seat" placeholder="座號 (例如 3)" style="width: 80px; height: 38px;">
-          <input type="text" id="q-name" placeholder="學生姓名" style="flex: 1.2; min-width: 110px; height: 38px;">
+          <input type="text" id="q-receipt" placeholder="完整收據 UUID" autocomplete="off" style="flex: 1; min-width: 220px; height: 38px;">
           <button type="button" id="do-query-btn" class="btn-primary" style="height: 38px; padding: 0 16px;">查詢紀錄</button>
         </div>
         <div id="query-results-box" style="font-size: 13px; max-height: 220px; overflow-y: auto;">
-          <p style="color: var(--muted); margin: 6px 0;">輸入班級與姓名即可調出過往繳交紀錄與教師評語。</p>
+          <p style="color: var(--muted); margin: 6px 0;">請輸入繳交後顯示的完整收據 UUID；遺失收據請聯絡教師協助查詢。</p>
         </div>
       </div>
     </div>
@@ -899,6 +898,17 @@
   <script>
     'use strict';
     const $ = id => document.getElementById(id);
+    const isDemo = !window.google?.script?.run;
+    if (isDemo) {
+      const banner = document.createElement('aside');
+      banner.id = 'demo-mode-banner';
+      banner.setAttribute('role', 'status');
+      banner.style.cssText = 'position:sticky;top:0;z-index:10000;padding:12px 18px;background:#fff3c4;color:#472f00;font-weight:700;text-align:center;';
+      banner.textContent = '模擬展示模式：資料、評語與分數均為固定範例；沒有上傳、AI 分析或雲端文件產出。請勿輸入真實學生資料。';
+      document.body.prepend(banner);
+      $('export-doc-btn').disabled = true;
+      $('export-doc-btn').textContent = '展示模式不產生文件';
+    }
     const form = $('form'), fields = $('fields');
     let ready = false, busy = false, requestId = null, maxBytes = 10 * 1024 * 1024;
     let currentAssignments = [], adminPassword = null, adminList = [];
@@ -911,7 +921,8 @@
 
     function rpc(method, data) {
       return new Promise((resolve, reject) => {
-        if (!window.google?.script?.run) {
+        if (isDemo) {
+          if (method === 'exportSummaryDoc') { reject(new Error('展示模式不產生 Google Docs 文件。')); return; }
           // 本機預覽模擬
           setTimeout(() => {
             if (method === 'getPublicConfig') {
@@ -927,7 +938,7 @@
                 receipt: data.requestId,
                 fileName: data.className + '_' + data.name + '.jpg',
                 ai: {
-                  topic: '顯微鏡植物細胞微觀觀察',
+                  topic: '【固定範例，非分析結果】顯微鏡植物細胞微觀觀察',
                   keywords: '細胞核, 葉綠體, 保衛細胞',
                   summary: '學生透過顯微鏡細心觀察植物葉片表皮保衛細胞構造，記錄完整。',
                   feedback: '觀察細膩且筆記繪圖清晰精美，具備優秀的科學探究與實證精神！',
@@ -1169,14 +1180,15 @@
     });
 
     /* 純 SVG 五維自主學習雷達圖 (零第三方依賴，加載 0 秒延遲) */
-    function drawLearningRadar(scores = { focus: 85, depth: 85, structure: 85, insight: 85, presentation: 85 }) {
+    function drawLearningRadar(scores) {
+      if (!scores) { $('learning-radar').innerHTML = '<text x="110" y="95" text-anchor="middle" font-size="14">未提供評分，待教師檢視</text>'; return; }
       const labels = ['主題聚焦', '探究深度', '資料條理', '反思洞見', '視覺呈現'];
       const vals = [
-        scores.focus || 85,
-        scores.depth || 80,
-        scores.structure || 85,
-        scores.insight || 85,
-        scores.presentation || 90
+        scores.focus,
+        scores.depth,
+        scores.structure,
+        scores.insight,
+        scores.presentation
       ];
       const svg = $('learning-radar');
       if (!svg) return;
@@ -1244,7 +1256,7 @@
       stepperBar.style.width = '25%';
       stepperTitle.textContent = '📸 正在進行影像智慧感知壓縮與封裝…';
       stepperPercent.textContent = '25%';
-      stepperSub.textContent = '將高解析手寫筆記最佳化，傳輸速度提升 10 倍';
+      stepperSub.textContent = '正在整理檔案，實際時間依檔案大小與網路而異';
       status('正在壓縮檔案並連線雲端硬碟…');
 
       try {
@@ -1254,10 +1266,11 @@
         stepperTitle.textContent = '✨ Gemini 多模態模型辨識與分析中…';
         stepperPercent.textContent = '60%';
         stepperSub.textContent = 'OCR 光學辨識手寫筆記，提煉關鍵字、摘要與 SDGs 永續對標';
-        status('檔案已送達雲端，AI 助教正在細心閱讀筆記重點…');
+        status(isDemo ? '正在載入固定展示範例…' : '正在傳送作業，等待伺服器確認…');
 
         const payload = {
           requestId,
+          anonymousDocumentConsent: $('anonymous-document-consent').checked,
           mimeType: processed.mimeType,
           fileData: processed.base64,
           className: $('className').value.trim(),
@@ -1272,7 +1285,7 @@
         stepperBar.style.width = '100%';
         stepperTitle.textContent = '🎉 成果證書卡生成完畢！';
         stepperPercent.textContent = '100%';
-        stepperSub.textContent = '已存入大溪國中自主學習雲端資料庫';
+        stepperSub.textContent = isDemo ? '固定範例，未存入雲端' : '伺服器已確認收件';
 
         $('receipt-file').textContent = res.fileName;
         $('receipt-id').textContent = res.receipt;
@@ -1281,7 +1294,7 @@
           $('ai-topic').textContent = res.ai.topic;
           $('ai-summary').textContent = res.ai.summary;
           $('ai-feedback').textContent = res.ai.feedback;
-          $('ai-sdgs-badge').textContent = res.ai.sdgs || 'SDG 4 優質教育';
+          $('ai-sdgs-badge').textContent = res.ai.sdgs || '尚未分析';
 
           const kwBox = $('ai-keywords');
           kwBox.innerHTML = '';
@@ -1292,7 +1305,7 @@
             kwBox.append(span);
           });
 
-          drawLearningRadar(res.ai.scores || { focus: 88, depth: 85, structure: 85, insight: 88, presentation: 90 });
+          drawLearningRadar(res.ai.scores);
           $('ai-result-box').classList.remove('hidden');
         }
 
@@ -1300,7 +1313,7 @@
           stepperBox.classList.add('hidden');
           $('receipt').classList.remove('hidden');
           form.classList.add('hidden');
-          status('作業已成功繳交，老師與 AI 助教已收到您的成果！');
+          status(isDemo ? '展示範例已載入，未繳交任何作業。' : '作業已收件；請保存收據，AI 建議仍需教師審查。');
         }, 500);
 
       } catch (err) {
@@ -1337,21 +1350,19 @@
     });
 
     $('do-query-btn').addEventListener('click', async () => {
-      const qClass = $('q-class').value.trim();
-      const qSeat = $('q-seat').value.trim();
-      const qName = $('q-name').value.trim();
+      const receipt = $('q-receipt').value.trim();
       const resBox = $('query-results-box');
 
-      if (!qClass || !qName) {
-        resBox.innerHTML = '<p style="color:#a23b24;">請至少輸入「班級」與「姓名」進行查詢。</p>';
+      if (!receipt) {
+        resBox.innerHTML = '<p style="color:#a23b24;">請輸入完整收據 UUID。</p>';
         return;
       }
 
       resBox.innerHTML = '<p style="color:var(--muted);">正在連線查詢中…</p>';
       try {
-        const res = await rpc('queryStudentSubmissions', { className: qClass, seat: qSeat, name: qName });
+        const res = await rpc('queryStudentSubmissions', { receipt });
         if (!res.list || !res.list.length) {
-          resBox.innerHTML = '<p style="color:var(--muted);">查無此學生的繳交紀錄，請確認班級或姓名是否正確。</p>';
+          resBox.innerHTML = '<p style="color:var(--muted);">查無此收據紀錄；遺失收據請聯絡教師。</p>';
           return;
         }
 
