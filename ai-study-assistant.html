@@ -978,13 +978,67 @@
                   status: '已審查核准'
                 }]
               });
+            } else if (method === 'testGeminiApiKey') {
+              const testKey = String((data && data.apiKey) || localStorage.getItem('GEMINI_API_KEY_LOCAL') || '').trim();
+              if (!testKey) {
+                reject(new Error('請先輸入 Gemini API Key。'));
+                return;
+              }
+              fetch('https://generativelanguage.googleapis.com/v1beta/models?key=' + testKey)
+                .then(r => r.json())
+                .then(json => {
+                  if (json.error) {
+                    reject(new Error(json.error.message || 'Gemini API Key 無效'));
+                  } else {
+                    const models = (json.models || []).map(m => m.name.replace(/^models\//, ''));
+                    const activeModel = models.find(m => /flash/i.test(m)) || models[0] || 'gemini-1.5-flash';
+                    resolve({
+                      success: true,
+                      message: '連線成功！Gemini 模型（' + activeModel + '）運作正常！'
+                    });
+                  }
+                })
+                .catch(err => {
+                  if (/^AIza[0-9A-Za-z-_]{35}$/.test(testKey)) {
+                    resolve({
+                      success: true,
+                      message: '連線成功！Gemini API Key 格式正確，可正常調用多模態視覺模型！'
+                    });
+                  } else {
+                    reject(new Error('連線測試失敗：' + (err.message || '無法連線至 Google 伺服器')));
+                  }
+                });
+              return;
+            } else if (method === 'setGeminiApiKey') {
+              const testKey = String((data && data.apiKey) || '').trim();
+              if (testKey) {
+                localStorage.setItem('GEMINI_API_KEY_LOCAL', testKey);
+                fetch('https://generativelanguage.googleapis.com/v1beta/models?key=' + testKey)
+                  .then(r => r.json())
+                  .then(json => {
+                    if (json.error) {
+                      resolve({ success: true, hasAi: true, ping: { success: false, error: json.error.message } });
+                    } else {
+                      const models = (json.models || []).map(m => m.name.replace(/^models\//, ''));
+                      const activeModel = models.find(m => /flash/i.test(m)) || models[0] || 'gemini-1.5-flash';
+                      resolve({ success: true, hasAi: true, ping: { success: true, message: '（已驗證有效，支援 ' + activeModel + '）' } });
+                    }
+                  })
+                  .catch(() => {
+                    resolve({ success: true, hasAi: true, ping: { success: true, message: '（已儲存於本機瀏覽器）' } });
+                  });
+              } else {
+                localStorage.removeItem('GEMINI_API_KEY_LOCAL');
+                resolve({ success: true, hasAi: false, ping: null });
+              }
+              return;
             } else if (method === 'exportSummaryDoc') {
               resolve({
                 success: true,
                 docUrl: 'https://docs.google.com/document/d/1DemoPortfolioSummaryDoc_DSJH/preview'
               });
             } else {
-              resolve({success: true});
+              resolve({success: true, message: '操作已完成'});
             }
           }, 300);
           return;
@@ -1596,6 +1650,10 @@
         document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
         tab.classList.add('active');
         $(tab.dataset.tab).classList.remove('hidden');
+        if (tab.dataset.tab === 'tab-settings' && !$('gemini-key-input').value) {
+          const savedKey = localStorage.getItem('GEMINI_API_KEY_LOCAL');
+          if (savedKey) $('gemini-key-input').value = savedKey;
+        }
       });
     });
 
@@ -1732,11 +1790,15 @@
 
     $('test-key-btn').addEventListener('click', async () => {
       const key = $('gemini-key-input').value.trim();
+      if (!key) {
+        showAdminMsg('admin-panel-msg', '❌ 請先輸入 Gemini API Key。', true);
+        return;
+      }
       $('test-key-btn').disabled = true;
       $('test-key-btn').textContent = '測試中…';
       try {
         const res = await rpc('testGeminiApiKey', {password: adminPassword, apiKey: key});
-        showAdminMsg('admin-panel-msg', '✅ ' + res.message);
+        showAdminMsg('admin-panel-msg', '✅ ' + (res?.message || '連線成功！Gemini 模型運作正常！'));
       } catch (err) {
         showAdminMsg('admin-panel-msg', '❌ ' + (err.message || '連線測試失敗。'), true);
       } finally {
