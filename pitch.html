@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5分鐘決審簡報｜大溪智慧校園 AI 協作矩陣：跨校複製與推廣藍圖</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+      background-color: #060911;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+    }
+    .slide-container {
+      aspect-ratio: 16 / 9;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+      background: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12), transparent 45%),
+                  radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.12), transparent 45%),
+                  #0b0f19;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.75);
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 2.25rem 3rem;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .slide.active {
+      display: flex;
+      animation: fadeIn 0.28s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .gradient-title {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 55%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-2 sm:p-4">
+
+  <!-- 頂部控制列 -->
+  <header class="max-w-[1280px] w-full mx-auto mb-2.5 px-4 py-2.5 rounded-xl glass-panel flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center space-x-3">
+      <a href="index.html#replication" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center space-x-1.5 transition-all">
+        <i data-lucide="arrow-left" class="w-4 h-4 text-cyan-400"></i>
+        <span>返回展示中心</span>
+      </a>
+      <div class="h-4 w-[1px] bg-slate-700 hidden sm:block"></div>
+      <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        大溪國中 AI 協作矩陣｜5分鐘「跨校複製與推廣」專題簡報
+      </span>
+    </div>
+
+    <!-- 5分鐘計時器與工具按鈕 -->
+    <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-1.5 bg-slate-900 border border-slate-700 px-3 py-1 rounded-lg">
+        <i data-lucide="timer" class="w-4 h-4 text-amber-400"></i>
+        <span id="timerDisplay" class="font-mono text-sm font-extrabold text-amber-400">05:00</span>
+        <button onclick="toggleTimer()" id="timerBtn" class="ml-1 px-2 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[11px] font-bold transition-all">
+          開始計時
+        </button>
+        <button onclick="resetTimer()" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 text-[11px]" title="重設計時">
+          ↺
+        </button>
+      </div>
+
+      <button onclick="toggleNotes()" id="notesBtn" class="px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-200 text-xs font-semibold flex items-center space-x-1 transition-all">
+        <i data-lucide="message-square-text" class="w-3.5 h-3.5"></i>
+        <span>講稿提詞機</span>
+      </button>
+
+      <a href="dsjh_campus_ai_replication_pitch.pptx" download class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center space-x-1.5 shadow-lg shadow-emerald-600/25 transition-all">
+        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+        <span>下載 PPTX 簡報檔</span>
+      </a>
+
+      <button onclick="toggleFullScreen()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white" title="全螢幕簡報 (F11)">
+        <i data-lucide="maximize" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 16:9 簡報主舞台 -->
+  <main class="flex-1 flex flex-col items-center justify-center w-full">
+    <div class="slide-container" id="slideStage">
+
+      <!-- ================= SLIDE 1: 封面與破題 ================= -->
+      <div class="slide active" data-time="⏱️ 建議配速：0:00 - 0:35 (35秒)" data-notes="各位評審委員好，我們是桃園市立大溪國中團隊，我是游貿仁老師，與團隊成員林佳均老師共同開發「大溪智慧校園 AI 協作矩陣」。在初審階段，我們展示了這套系統如何為大溪國中節省 90% 以上的行政重複工時；而今天這 5 分鐘，我們要重點報告：這套系統是如何在設計的第一天起，就為了「讓桃園市所有學校都能零成本、3 分鐘無痛複製」而打造！">
+        <div class="space-y-4">
+          <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-cyan-300 text-xs sm:text-sm font-bold">
+            <span>🏆 桃園市「AI好幫手：智慧協作工具徵選與應用計畫」決審簡報</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+            大溪智慧校園 AI 協作矩陣
+          </h1>
+          <h2 class="text-xl sm:text-3xl font-extrabold gradient-title">
+            從單校實證到全市普及：「1-3-5 零門檻」跨校複製與推廣藍圖
+          </h2>
+          <p class="text-sm sm:text-base text-slate-300 max-w-4xl leading-relaxed">
+            串聯「公文排程、自主學習手寫OCR、社團公平分發、美育創客胸章、體感數學與雙人素養對決」六大實戰系統。<br>
+            100% 建構於 Google 免費教育雲與 GitHub 開源架構，讓桃園市每一所學校都能<strong class="text-cyan-300">「零預算、免架站、3分鐘無痛複製」</strong>！
+          </p>
+        </div>
+
+        <div class="py-2.5 px-5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-wrap items-center justify-between text-xs sm:text-sm text-slate-200 font-semibold">
+          <span>🏫 提案學校：桃園市立大溪國民中學</span>
+          <span>👨‍🏫 代表人：游貿仁 老師</span>
+          <span>👩‍🏫 團隊成員：林佳均 老師</span>
+          <span class="text-cyan-400">📂 組別：智慧行政（兼精進教學創新）</span>
+        </div>
+
+        <div class="grid grid-cols-4 gap-4">
+          <div class="p-4 rounded-2xl bg-slate-900/85 border-t-4 border-cyan-400 shadow-lg">
+            <div class="text-2xl sm:text-4xl font-black text-cyan-400">90%+</div>
+            <div class="text-sm font-bold text-white mt-1">行政重複工時節省</div>
+            <div class="text-xs text-slate-400 mt-0.5">公文防撞與手寫OCR自動化</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/85 border-t-4 border-emerald-400 shadow-lg">
+            <div class="text-2xl sm:text-4xl font-black text-emerald-400">3 分鐘</div>
+            <div class="text-sm font-bold text-white mt-1">外校一鍵建立副本</div>
+            <div class="text-xs text-slate-400 mt-0.5">試算表母版連同腳本即刻複製</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/85 border-t-4 border-indigo-400 shadow-lg">
+            <div class="text-2xl sm:text-4xl font-black text-indigo-400">100%</div>
+            <div class="text-sm font-bold text-white mt-1">各校個資主權獨立</div>
+            <div class="text-xs text-slate-400 mt-0.5">資料存於各校自有 Google 雲端</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/85 border-t-4 border-amber-400 shadow-lg">
+            <div class="text-2xl sm:text-4xl font-black text-amber-400">$0 元</div>
+            <div class="text-sm font-bold text-white mt-1">跨校伺服器與授權費</div>
+            <div class="text-xs text-slate-400 mt-0.5">Serverless 免機房、零維運成本</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SLIDE 2: 六大模組全景 ================= -->
+      <div class="slide" data-time="⏱️ 建議配速：0:35 - 1:25 (50秒)" data-notes="為什麼這套系統值得推廣到全市各校？因為它解決的是每一所國中小的共同痛點：第一、救行政：行事曆 Agent 貼上公文就自動防撞期並生出 LINE 公告；學習助教讓學生免登入交作業，手寫筆記 15 秒變成期末成果冊。第二、助輔導與美育：社團選社系統用 AI 引導興趣並防搶額公平分發；藝術掃描儀把畫作評語直接變成 58mm 實體創客胸章。第三、燃課堂：WebCam 雙手體感拆質數，以及改編自東興國中鍾老師創意的 DDP 雙人同屏搶答。這六大工具全部已經在大溪國中實戰運作！">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 text-xs font-bold">全景矩陣 × 跨處室痛點解方</span>
+            <span class="text-xs font-mono text-slate-400">Slide 2 / 7</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">為什麼外校老師一看到就想複製？六大實戰系統一次到位</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">不需東拼西湊單點工具，一套矩陣同時滿足各校「教務、學務、輔導與科任課堂」的真實需求</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 flex-1 my-3">
+          <!-- Pillar 1 -->
+          <div class="rounded-2xl bg-slate-900/90 border border-cyan-500/40 flex flex-col overflow-hidden">
+            <div class="bg-cyan-950/80 px-4 py-2.5 border-b border-cyan-500/30">
+              <div class="text-sm sm:text-base font-extrabold text-white">🏢 模組一：智慧行政與流程自動化</div>
+              <div class="text-[11px] text-cyan-300 font-semibold">適用：各校教務處、學務處、行政同仁</div>
+            </div>
+            <div class="p-3.5 space-y-3 flex-1 flex flex-col justify-around text-xs">
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="font-bold text-cyan-400 text-sm mb-1">📅 校園智慧行事曆 Agent</div>
+                <p class="text-slate-300 leading-relaxed">貼上公文自動擷取時間地點、啟動<strong>「場地衝突雷達」</strong>，1 秒產出 LINE 推播與標準會議議程初稿。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="font-bold text-cyan-400 text-sm mb-1">📚 學習軌跡 AI 助教 2.0</div>
+                <p class="text-slate-300 leading-relaxed">學生<strong>免登入平權收件</strong>，Gemini Vision OCR 自動辨識手寫筆記字跡，15 秒自動排版產出期末成果冊。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div class="rounded-2xl bg-slate-900/90 border border-indigo-500/40 flex flex-col overflow-hidden">
+            <div class="bg-indigo-950/80 px-4 py-2.5 border-b border-indigo-500/30">
+              <div class="text-sm sm:text-base font-extrabold text-white">🧭 模組二：適性生涯導航與美育創客</div>
+              <div class="text-[11px] text-indigo-300 font-semibold">適用：各校訓育組、輔導室、藝文教師</div>
+            </div>
+            <div class="p-3.5 space-y-3 flex-1 flex flex-col justify-around text-xs">
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="font-bold text-indigo-400 text-sm mb-1">🎯 AI 智慧社團選社系統</div>
+                <p class="text-slate-300 leading-relaxed">AI 興趣探索對話引導選社；後端導入 <strong>LockService 原子併發鎖</strong>與班級分散演算法，5 分鐘公平分發完畢。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="font-bold text-indigo-400 text-sm mb-1">🎨 AI 藝術能量掃描儀 2.0</div>
+                <p class="text-slate-300 leading-relaxed">畫作五維度多模態鑑賞與溫暖講評，一鍵輸出 <strong>58mm 圓形刀模印刷檔</strong>，直接壓製實體榮譽胸章。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 3 -->
+          <div class="rounded-2xl bg-slate-900/90 border border-emerald-500/40 flex flex-col overflow-hidden">
+            <div class="bg-emerald-950/80 px-4 py-2.5 border-b border-emerald-500/30">
+              <div class="text-sm sm:text-base font-extrabold text-white">🎮 模組三：跨領域體感與遊戲素養</div>
+              <div class="text-[11px] text-emerald-300 font-semibold">適用：各校國英數社自全科教師</div>
+            </div>
+            <div class="p-3.5 space-y-3 flex-1 flex flex-col justify-around text-xs">
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="font-bold text-emerald-400 text-sm mb-1">🛡️ 數界試煉：質數守門</div>
+                <p class="text-slate-300 leading-relaxed">結合 <strong>MediaPipe WebCam 體感視覺</strong>，學生站在螢幕前用「雙手揮擊」拆解質因數，全身動腦學數學。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-950/70 border border-slate-800">
+                <div class="font-bold text-emerald-400 text-sm mb-1">⚔️ DDP 知識對決 (跨校共創典範)</div>
+                <p class="text-slate-300 leading-relaxed">改編自<strong>東興國中鍾老師</strong>創意，雙人同屏零延遲搶答；支援各校教師以 <strong>CSV 一鍵匯入自訂題庫</strong>！</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs text-center text-slate-400">
+          💡 六大系統皆已 100% 線上實機運行，並提供「評審免金鑰快速體驗通道」
+        </div>
+      </div>
+
+      <!-- ================= SLIDE 3: 破除三大跨校推廣障礙 ================= -->
+      <div class="slide" data-time="⏱️ 建議配速：1:25 - 2:15 (50秒)" data-notes="評審委員可能會問：很多學校做出的好工具，為什麼最後推不到其他學校？因為外校有三大恐懼：怕沒錢買伺服器、怕老師不會寫程式、更怕學生個資外流到別校！我們從底層架構完美解決這三點：第一，全系統採用 GitHub Pages 加 Google 免費教育雲，主機費 0 元，免資訊組長維護。第二，採用「單一網頁檔」加「Google 試算表一鍵建立副本」，不需寫任何一行程式。第三，也是最重要的資安優勢：當外校按下「建立副本」後，所有學生作業、選社名單全部存在「他們學校自己的 Google 雲端硬碟」，各校資料主權 100% 獨立！">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-bold">破除跨校推廣障礙</span>
+            <span class="text-xs font-mono text-slate-400">Slide 3 / 7</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">為什麼別人的系統搬不走，而「大溪 AI 矩陣」能秒速複製？</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">直面外校在引進數位工具時最恐懼的「經費、技術、個資」三大高牆，從底層架構徹底根除</p>
+        </div>
+
+        <div class="space-y-3 flex-1 flex flex-col justify-center my-2">
+          <!-- Row 1 -->
+          <div class="grid grid-cols-11 gap-3 items-center">
+            <div class="col-span-5 p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/40">
+              <div class="text-sm font-bold text-rose-400">❌ 傳統阻礙 1：伺服器經費與機房維運負擔</div>
+              <p class="text-xs text-slate-300 mt-1">需租用雲端主機、架設資料庫；外校無多餘預算，資訊組長更無暇維護他校開發的系統。</p>
+            </div>
+            <div class="col-span-1 text-center text-2xl font-black text-cyan-400">➔</div>
+            <div class="col-span-5 p-3.5 rounded-xl bg-cyan-950/40 border-2 border-cyan-400/70">
+              <div class="text-sm font-bold text-cyan-300">✅ 破局解方 1：【$0 元 Serverless 全雲端原生架構】</div>
+              <p class="text-xs text-white mt-1">前端託管於 GitHub Pages 免費 CDN，後端採用各校既有的 Google 教育雲 (Apps Script)。<strong>零主機費、免管機房、永久零維運成本！</strong></p>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="grid grid-cols-11 gap-3 items-center">
+            <div class="col-span-5 p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/40">
+              <div class="text-sm font-bold text-rose-400">❌ 傳統阻礙 2：程式技術與環境建置門檻</div>
+              <p class="text-xs text-slate-300 mt-1">需安裝 Python/Node 環境或修改複雜程式碼；一般行政人員與科任教師看到程式碼就卻步。</p>
+            </div>
+            <div class="col-span-1 text-center text-2xl font-black text-emerald-400">➔</div>
+            <div class="col-span-5 p-3.5 rounded-xl bg-emerald-950/40 border-2 border-emerald-400/70">
+              <div class="text-sm font-bold text-emerald-300">✅ 破局解方 2：【單一 HTML 離線包 ＋ 試算表一鍵建立副本】</div>
+              <p class="text-xs text-white mt-1">免安裝軟體！支援 <strong>BYOK（自帶免費 Gemini 金鑰）</strong>，後端系統只需在 Google 試算表按<strong>「建立副本」</strong>即完成安裝！</p>
+            </div>
+          </div>
+
+          <!-- Row 3 -->
+          <div class="grid grid-cols-11 gap-3 items-center">
+            <div class="col-span-5 p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/40">
+              <div class="text-sm font-bold text-rose-400">❌ 傳統阻礙 3：跨校學生個資與資安外洩疑慮</div>
+              <p class="text-xs text-slate-300 mt-1">若共用中央資料庫，外校學生的姓名、成績與作品會存放在開發學校，違反校園資安規範。</p>
+            </div>
+            <div class="col-span-1 text-center text-2xl font-black text-amber-400">➔</div>
+            <div class="col-span-5 p-3.5 rounded-xl bg-amber-950/40 border-2 border-amber-400/70">
+              <div class="text-sm font-bold text-amber-300">✅ 破局解方 3：【各校資料主權 100% 獨立 (Zero PII Exposure)】</div>
+              <p class="text-xs text-white mt-1">外校建立試算表副本後，所有學生名單、作業與選社紀錄<strong>「100% 儲存在該校自己的 Google 雲端硬碟」</strong>，跨校零個資接觸！</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs text-center text-cyan-300 font-semibold">
+          🔒 資安與平權雙重保障：前端去識別化提示詞工程 ＋ 後端各校獨立 Google Drive 實體隔離
+        </div>
+      </div>
+
+      <!-- ================= SLIDE 4: 1-3-5 三階零門檻跨校複製模式 ================= -->
+      <div class="slide" data-time="⏱️ 建議配速：2:15 - 3:20 (65秒)【核心重頭戲】" data-notes="為了讓不同資訊程度的外校老師都能輕鬆採用，我們設計了「1-3-5 三階零門檻複製模式」：第一階【0 分鐘即開即用包】：針對一般科任與導師。像是智慧行事曆、藝術掃描儀、質數守門和 DDP 知識對決，老師只要點開網址或下載單一 HTML 檔，貼上免費的 Gemini API 金鑰、匯入自己的 CSV 題庫，1 秒鐘都不用改程式，今天就能在班上用！第二階【3 分鐘行政處室副本包】：針對需要收學生資料的「學習軌跡助教」與「社團選社系統」。我們已經把資料庫結構與 GAS 程式碼打包在「公版 Google 試算表母版」裡。外校組長只要點「檔案 ➔ 建立副本」，再點「部署」，3 分鐘就能生成該校獨立的選社與作業系統！第三階【5 分鐘全校開源包】：資訊組長只要在 GitHub 按一下 Fork，把大溪國中四個字換成貴校校名，5 分鐘就能擁有全校級的 AI 協作入口網！">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold">核心重點：跨校複製工程</span>
+            <span class="text-xs font-mono text-slate-400">Slide 4 / 7</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">首創「1-3-5 階梯式複製模式」：各校依需求自由領取</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">無論是「今天想立刻上課的科任老師」、「想自動化收件的行政組長」或「資訊組長」，皆可對號入座</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 flex-1 my-3">
+          <!-- Level 1 -->
+          <div class="rounded-2xl bg-slate-900/95 border-2 border-emerald-400/70 flex flex-col justify-between p-4">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-xs font-black">LEVEL 1｜即開即用包</span>
+                <span class="text-xs font-bold text-emerald-400">⚡ 0 分鐘部署</span>
+              </div>
+              <h3 class="text-lg font-extrabold text-white mt-2">免安裝・點開網址即用</h3>
+              <p class="text-xs text-slate-400 mt-0.5">👩‍🏫 適合：各校全體科任教師、班級導師</p>
+              <div class="mt-3 p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-1 text-slate-300">
+                <div class="font-bold text-emerald-400">📦 包含系統：</div>
+                <div>• 校園智慧行事曆 Agent</div>
+                <div>• AI 藝術能量掃描儀 2.0</div>
+                <div>• 數界試煉：質數守門 / DDP 知識對決</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-xs space-y-1 text-white">
+              <div class="font-bold text-emerald-300">🚀 外校複製 2 步驟：</div>
+              <div>1. 點開公開網址（或下載單一 <code class="text-emerald-300">.html</code> 離線檔）。</div>
+              <div>2. 填入個人免費 Gemini 金鑰或匯入題庫 CSV，<strong>今天回教室立刻上課！</strong></div>
+            </div>
+          </div>
+
+          <!-- Level 2 -->
+          <div class="rounded-2xl bg-slate-900/95 border-2 border-cyan-400/70 flex flex-col justify-between p-4">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-xs font-black">LEVEL 2｜行政處室副本包</span>
+                <span class="text-xs font-bold text-cyan-400">⏱️ 3 分鐘部署</span>
+              </div>
+              <h3 class="text-lg font-extrabold text-white mt-2">Google 試算表一鍵副本</h3>
+              <p class="text-xs text-slate-400 mt-0.5">🏢 適合：各校教務處、學務處、訓育組</p>
+              <div class="mt-3 p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-1 text-slate-300">
+                <div class="font-bold text-cyan-400">📦 包含系統：</div>
+                <div>• 學習軌跡 AI 助教 2.0 (作業收件+OCR)</div>
+                <div>• AI 智慧社團選社與分發系統</div>
+                <div class="text-[11px] text-slate-400">（綁定各校自有 Google Drive 與試算表）</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-xl bg-cyan-950/40 border border-cyan-500/40 text-xs space-y-1 text-white">
+              <div class="font-bold text-cyan-300">🚀 外校複製 3 步驟：</div>
+              <div>1. 開啟大溪公開之「公版母版試算表」。</div>
+              <div>2. 點擊<strong>「檔案 ➔ 建立副本」</strong>（自動連同 GAS 程式碼複製到該校雲端）。</div>
+              <div>3. 點擊「新增部署」，<strong>3 分鐘產出該校專屬系統！</strong></div>
+            </div>
+          </div>
+
+          <!-- Level 3 -->
+          <div class="rounded-2xl bg-slate-900/95 border-2 border-purple-400/70 flex flex-col justify-between p-4">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-xs font-black">LEVEL 3｜全校旗艦開源包</span>
+                <span class="text-xs font-bold text-purple-400">💻 5 分鐘部署</span>
+              </div>
+              <h3 class="text-lg font-extrabold text-white mt-2">GitHub 整站一鍵 Fork</h3>
+              <p class="text-xs text-slate-400 mt-0.5">🛠️ 適合：各校資訊組長、縣市數位辦公室</p>
+              <div class="mt-3 p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-1 text-slate-300">
+                <div class="font-bold text-purple-400">📦 包含系統：</div>
+                <div>• 大溪智慧校園 AI 協作矩陣總入口網</div>
+                <div>• 全部 6 大子系統完整開源倉庫</div>
+                <div class="text-[11px] text-slate-400">（100% 教育開源共享授權）</div>
+              </div>
+            </div>
+            <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-500/40 text-xs space-y-1 text-white">
+              <div class="font-bold text-purple-300">🚀 外校複製 3 步驟：</div>
+              <div>1. 於 GitHub 點擊<strong>「Fork」</strong>複製整座倉庫。</div>
+              <div>2. 於 Settings 開啟 GitHub Pages 免費代管。</div>
+              <div>3. 搜尋替換校名與副本連結，<strong>5 分鐘完成全校 AI 入口網！</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs text-center text-emerald-300 font-semibold">
+          ✨ 展示網站已內建「跨校一鍵複製中心 (#replication)」，提供所有母版與離線包一鍵領取！
+        </div>
+      </div>
+
+      <!-- ================= SLIDE 5: 3 分鐘跨校部署 SOP ================= -->
+      <div class="slide" data-time="⏱️ 建議配速：3:20 - 4:00 (40秒)" data-notes="我們來看外校老師實際複製的 4 個步驟，只要 3 分鐘：第 1 步（30秒）：在我們網站點擊母版連結，按「建立副本」，資料表與後端程式就自動複製到該校雲端。第 2 步（1分鐘）：貼上免費申請的 Gemini API 金鑰。第 3 步（2分鐘）：按一下「新增部署」，馬上拿到該校專屬網址。第 4 步（3分鐘）：最關鍵的是，我們把 Google 試算表設計成「免寫程式後台」！外校老師以後要改社團名額、改作業題目、換遊戲題庫，只要在試算表打字就會自動同步，職務交接完全零技術債！">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold">標準化作業流程 (SOP)</span>
+            <span class="text-xs font-mono text-slate-400">Slide 5 / 7</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">實證拆解：外校行政老師如何「3 分鐘複製一套選社／收件系統」？</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">跟著網站內建「跨校複製精靈」4 步驟點選，免寫任何一行程式碼即可上線運作</p>
+        </div>
+
+        <div class="grid grid-cols-4 gap-3.5 my-3 flex-1">
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-cyan-500/50 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-black text-cyan-400 mb-2">
+                <span>STEP 1</span><span>⏱️ 00:30</span>
+              </div>
+              <div class="text-base font-extrabold text-white mb-2">建立試算表母版副本</div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                點擊本案公開母版連結，按<strong class="text-cyan-300">【檔案 ➔ 建立副本】</strong>。<br>
+                • 自動複製所有工作表欄位<br>
+                • 自動連帶複製 Apps Script 後端程式<br>
+                • 自動於該校雲端建立收件資料夾
+              </p>
+            </div>
+            <div class="text-[11px] text-cyan-400 font-semibold pt-2 border-t border-slate-800">✔ 資料庫與後端一次到位</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-indigo-500/50 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-black text-indigo-400 mb-2">
+                <span>STEP 2</span><span>⏱️ 01:00</span>
+              </div>
+              <div class="text-base font-extrabold text-white mb-2">填入免費 Gemini 金鑰</div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                至 Google AI Studio 點擊<strong class="text-indigo-300">【Create API Key】</strong>。<br>
+                • 教育免費額度極充裕（每分鐘15次）<br>
+                • 貼入系統設定欄（BYOK 機制）<br>
+                • 金鑰僅存於該校自有環境
+              </p>
+            </div>
+            <div class="text-[11px] text-indigo-400 font-semibold pt-2 border-t border-slate-800">✔ 零 API 租用費負擔</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/50 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-black text-emerald-400 mb-2">
+                <span>STEP 3</span><span>⏱️ 02:00</span>
+              </div>
+              <div class="text-base font-extrabold text-white mb-2">一鍵部署專屬網址</div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                打開 Apps Script 點選<strong class="text-emerald-300">【部署 ➔ 新增部署作業】</strong>。<br>
+                • 選取「網頁應用程式 (Web App)」<br>
+                • 權限設為「所有人（免登入收件）」<br>
+                • 即刻產出該校專屬網址與 QR Code
+              </p>
+            </div>
+            <div class="text-[11px] text-emerald-400 font-semibold pt-2 border-t border-slate-800">✔ 全校師生免登入即用</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-amber-500/50 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-black text-amber-400 mb-2">
+                <span>STEP 4</span><span>⏱️ 03:00</span>
+              </div>
+              <div class="text-base font-extrabold text-white mb-2">改試算表＝改全站內容</div>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                外校老師完全不必碰程式碼！直接在試算表打字即生效：<br>
+                • 改「社團名單表」➔ 選社自動更新<br>
+                • 改「作業項目表」➔ 收件自動更新<br>
+                • 匯入「各科 CSV」➔ 題庫自動更新
+              </p>
+            </div>
+            <div class="text-[11px] text-amber-400 font-semibold pt-2 border-t border-slate-800">✔ 職務交接零技術債</div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/40 text-xs sm:text-sm text-white font-semibold text-center">
+          💡 關鍵設計巧思：<span class="text-cyan-300">【以試算表作為無程式碼後台 (Spreadsheet-as-CMS)】</span>— 只要會用 Excel 打字，就能永久自主維運！
+        </div>
+      </div>
+
+      <!-- ================= SLIDE 6: 桃園市跨校推廣實證與三部曲 ================= -->
+      <div class="slide" data-time="⏱️ 建議配速：4:00 - 4:40 (40秒)" data-notes="在具體推廣策略上，我們本身就是「桃園跨校共好」的實踐者——矩陣中的 DDP 知識對決就是從東興國中鍾老師的創意出發，經大溪國中升級後再開源回饋全市。我們規劃了「推廣三部曲」：第一部曲【線上自助領取中心】：我們今天已經在網站正式上線了「跨校複製專區」，外校老師現在上網就能一鍵下載離線包與複製試算表母版！第二部曲【30 分鐘實作工作坊】：配合局端與輔導團研習，老師帶筆電來，30 分鐘現場幫他部署好帶回學校。第三部曲【跨校題庫與 Prompt 共享池】：建立全市 CSV 題庫池，一校出題、全桃園各校直接匯入共好！">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold">桃園跨校共好藍圖</span>
+            <span class="text-xs font-mono text-slate-400">Slide 6 / 7</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">具備實證基因的推廣計畫：從「雙校共創」走向「全市普及」</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">我們不只是「未來想推廣」，而是已經完成跨校改編實證，並在網站正式上線【跨校一鍵複製中心】！</p>
+        </div>
+
+        <!-- 跨校實證橫幅 -->
+        <div class="p-3.5 rounded-2xl bg-gradient-to-r from-indigo-950/90 via-purple-950/80 to-indigo-950/90 border border-indigo-400/50 my-2">
+          <div class="text-sm sm:text-base font-extrabold text-amber-300">
+            🌟 桃園跨校共創活實證：「桃園市立東興國中原創啟發 ➔ 大溪國中改編升級 ➔ 全桃園市開源共享」
+          </div>
+          <p class="text-xs text-slate-200 mt-1 leading-relaxed">
+            本矩陣中之「DDP 知識對決」源自<strong>東興國中鍾老師</strong>之教學創意，經大溪國中團隊重構為零延遲雙人同屏競技、加入合成音效與 CSV 跨科題庫匯入，再整合進校園 AI 矩陣公開回饋全市——<strong>證明本系統具備極佳的「跨校移植性」與「社群共好基因」！</strong>
+          </p>
+        </div>
+
+        <!-- 三部曲卡片 -->
+        <div class="grid grid-cols-3 gap-4 flex-1">
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-cyan-500/50 flex flex-col justify-between">
+            <div>
+              <span class="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-xs font-bold">第一部曲：短期（已上線！）</span>
+              <h3 class="text-base sm:text-lg font-extrabold text-white mt-2">🌐 線上「跨校一鍵複製中心」</h3>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                • 已於本案網站正式啟用<strong>【跨校複製專區 (#replication)】</strong>。<br>
+                • 提供單一 HTML 離線包、試算表母版連結、CSV 題庫範本下載。<br>
+                • 附 3 分鐘圖文 SOP 與示範短片，外校教師隨時上網即可自助領取！
+              </p>
+            </div>
+            <div class="text-xs font-bold text-cyan-400 pt-2 border-t border-slate-800">🟢 狀態：100% 已上線運作中</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/50 flex flex-col justify-between">
+            <div>
+              <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-xs font-bold">第二部曲：中期（種子研習）</span>
+              <h3 class="text-base sm:text-lg font-extrabold text-white mt-2">🛠️ 30分鐘「帶系統回學校」工作坊</h3>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                • 配合教育局數位學習推動辦公室、領域輔導團辦理實作工作坊。<br>
+                • 打破「聽完就忘」的傳統研習：外校老師帶筆電來，<strong>現場 30 分鐘完成「試算表建立副本＋金鑰設定」</strong>，直接帶一套可用系統回學校！
+              </p>
+            </div>
+            <div class="text-xs font-bold text-emerald-400 pt-2 border-t border-slate-800">🎯 目標：培育各校種子行政與教師</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border border-purple-500/50 flex flex-col justify-between">
+            <div>
+              <span class="px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-xs font-bold">第三部曲：長期（全市共編池）</span>
+              <h3 class="text-base sm:text-lg font-extrabold text-white mt-2">🤝 桃園跨校題庫與 Prompt 共享池</h3>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                • 建立「桃園市校園 AI 共編雲端池」：<br>
+                • <strong>行政端</strong>：共享各處室公文轉譯與會議紀錄 Prompt 範本。<br>
+                • <strong>教學端</strong>：共編國中各科 CSV 遊戲題庫，<strong>「一校出題、全市直接匯入」</strong>！
+              </p>
+            </div>
+            <div class="text-xs font-bold text-purple-400 pt-2 border-t border-slate-800">♾️ 效益：全桃園教師社群永續共好</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SLIDE 7: 結語與全市擴散效益預估 ================= -->
+      <div class="slide" data-time="⏱️ 建議配速：4:40 - 5:00 (20秒)" data-notes="最後，在大溪國中一所學校，每學期就能省下超過 300 小時的行政工時；當我們透過「1-3-5 複製模式」推廣到 10 校、甚至全桃園 60 多所國中時，每學期將為桃園老師省下上萬小時，而且市府與各校的伺服器成本依然是 0 元！我們的「跨校一鍵複製中心」已經在網站正式上線，隨時準備好為桃園市所有學校服務。感謝各位評審委員！">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold">結語與全市效益展望</span>
+            <span class="text-xs font-mono text-slate-400">Slide 7 / 7</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">大溪起步・桃園共好：打造可無限複製的智慧校園新範式</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">每多一所學校複製，就能為桃園市教師省下數百小時行政負荷，把時間真正還給孩子與教學！</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 my-3 flex-1">
+          <div class="p-4 rounded-2xl bg-slate-900/90 border-2 border-cyan-400/60 flex flex-col justify-between">
+            <div>
+              <div class="text-xs font-bold text-slate-400">📍 單校實證（大溪國中）</div>
+              <div class="text-2xl sm:text-3xl font-black text-cyan-400 mt-1">省下 300+ 小時/學期</div>
+              <ul class="text-xs text-slate-300 space-y-1.5 mt-3">
+                <li>• 公文排程與防撞：20分 ➔ 2分鐘</li>
+                <li>• 自主學習成果冊：10小時 ➔ 15秒</li>
+                <li>• 全校社團志願分發：1週 ➔ 5分鐘</li>
+                <li>• 雲端主機與維護費：<strong>$0 元</strong></li>
+              </ul>
+            </div>
+            <div class="text-xs text-cyan-300 font-bold pt-2 border-t border-slate-800">✔ 已於校內常態化實戰運行</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border-2 border-emerald-400/60 flex flex-col justify-between">
+            <div>
+              <div class="text-xs font-bold text-slate-400">🌱 推廣至 10 所種子學校</div>
+              <div class="text-2xl sm:text-3xl font-black text-emerald-400 mt-1">省下 3,000+ 小時/學期</div>
+              <ul class="text-xs text-slate-300 space-y-1.5 mt-3">
+                <li>• 10 校教務、學務、輔導處同步減量</li>
+                <li>• 惠及 <strong>10,000+ 名</strong> 桃園學子平權學習</li>
+                <li>• 跨校共編累積 50+ 份各科遊戲題庫</li>
+                <li>• 跨校增設伺服器成本：<strong>依然 $0 元</strong></li>
+              </ul>
+            </div>
+            <div class="text-xs text-emerald-300 font-bold pt-2 border-t border-slate-800">✔ 30 分鐘工作坊即可快速複製</div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-900/90 border-2 border-amber-400/60 flex flex-col justify-between">
+            <div>
+              <div class="text-xs font-bold text-slate-400">🚀 擴散至全桃園市國中 (60+校)</div>
+              <div class="text-2xl sm:text-3xl font-black text-amber-400 mt-1">省下 18,000+ 小時/學期</div>
+              <ul class="text-xs text-slate-300 space-y-1.5 mt-3">
+                <li>• 全市零預算無痛升級 AI 智慧校園</li>
+                <li>• 各校學生個資 100% 獨立存於各校雲端</li>
+                <li>• 樹立全國首創<strong>「零機房負擔、全開源共好」</strong>之縣市級 AI 協作標竿！</li>
+              </ul>
+            </div>
+            <div class="text-xs text-amber-300 font-bold pt-2 border-t border-slate-800">✔ 隨時可向全市國中小全面推展</div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-cyan-950/80 via-indigo-950/80 to-purple-950/80 border border-cyan-400/50 text-center space-y-1">
+          <div class="text-sm sm:text-base font-extrabold text-cyan-300">
+            🌐 跨校一鍵複製中心已上線：<a href="index.html#replication" class="underline hover:text-white">https://coolokey.github.io/dsjh-campus-ai-hub/#replication</a>
+          </div>
+          <div class="text-xs text-slate-200 font-medium">
+            感謝評審委員聆聽！誠摯邀請委員點擊返回網站，親自體驗「0 分鐘即開即用」與「3 分鐘試算表副本複製」流程！
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 講稿提詞機 (預設開啟，可切換) -->
+    <div id="notesPanel" class="max-w-[1280px] w-full mx-auto mt-3 p-4 rounded-xl glass-panel border border-indigo-500/30">
+      <div class="flex items-center justify-between text-xs text-indigo-300 font-bold mb-1">
+        <span id="slideTimeHint">⏱️ 建議配速：0:00 - 0:35 (35秒)</span>
+        <span>💡 鍵盤 <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">←</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">→</kbd> 或空白鍵可快速翻頁</span>
+      </div>
+      <p id="slideNotesText" class="text-xs sm:text-sm text-slate-200 leading-relaxed"></p>
+    </div>
+  </main>
+
+  <!-- 底部投影片導覽控制列 -->
+  <footer class="max-w-[1280px] w-full mx-auto mt-2.5 px-4 py-2 rounded-xl glass-panel flex items-center justify-between">
+    <button onclick="prevSlide()" id="prevBtn" class="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-bold flex items-center space-x-1.5 transition-all">
+      <i data-lucide="chevron-left" class="w-4 h-4"></i>
+      <span>上一頁</span>
+    </button>
+
+    <div class="flex items-center space-x-2" id="dotsContainer"></div>
+
+    <button onclick="nextSlide()" id="nextBtn" class="px-4 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs sm:text-sm font-bold flex items-center space-x-1.5 shadow-lg shadow-cyan-600/30 transition-all">
+      <span>下一頁</span>
+      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </button>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const slideTimeHint = document.getElementById('slideTimeHint');
+    const slideNotesText = document.getElementById('slideNotesText');
+    const notesPanel = document.getElementById('notesPanel');
+    let currentSlide = 0;
+
+    // 建立頁碼圓點
+    slides.forEach((_, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `px-2.5 py-1 rounded-md text-xs font-bold transition-all ${idx === 0 ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`;
+      btn.innerText = idx + 1;
+      btn.onclick = () => showSlide(idx);
+      dotsContainer.appendChild(btn);
+    });
+
+    function showSlide(idx) {
+      if (idx < 0 || idx >= slides.length) return;
+      slides[currentSlide].classList.remove('active');
+      currentSlide = idx;
+      slides[currentSlide].classList.add('active');
+
+      // 更新圓點狀態
+      Array.from(dotsContainer.children).forEach((dot, i) => {
+        dot.className = `px-2.5 py-1 rounded-md text-xs font-bold transition-all ${i === currentSlide ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`;
+      });
+
+      // 更新提詞機
+      slideTimeHint.innerText = slides[currentSlide].getAttribute('data-time') || '';
+      slideNotesText.innerText = slides[currentSlide].getAttribute('data-notes') || '';
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) showSlide(currentSlide - 1);
+    }
+
+    function toggleNotes() {
+      notesPanel.classList.toggle('hidden');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+
+    // 鍵盤左右鍵翻頁
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+      }
+    });
+
+    // 5分鐘計時器
+    let remainingSeconds = 300;
+    let timerInterval = null;
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerBtn = document.getElementById('timerBtn');
+
+    function updateTimerUI() {
+      const m = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+      const s = String(remainingSeconds % 60).padStart(2, '0');
+      timerDisplay.innerText = `${m}:${s}`;
+      if (remainingSeconds <= 60) {
+        timerDisplay.className = 'font-mono text-sm font-extrabold text-rose-400 animate-pulse';
+      } else {
+        timerDisplay.className = 'font-mono text-sm font-extrabold text-amber-400';
+      }
+    }
+
+    function toggleTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        timerBtn.innerText = '繼續計時';
+      } else {
+        timerBtn.innerText = '暫停';
+        timerInterval = setInterval(() => {
+          if (remainingSeconds > 0) {
+            remainingSeconds--;
+            updateTimerUI();
+          } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerBtn.innerText = '時間到';
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      remainingSeconds = 300;
+      timerBtn.innerText = '開始計時';
+      updateTimerUI();
+    }
+
+    // 初始化第一頁提詞
+    showSlide(0);
+  </script>
+</body>
+</html>
